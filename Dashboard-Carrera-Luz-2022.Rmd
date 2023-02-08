@@ -13,8 +13,9 @@ output:
         google: JetBrains Mono
     orientation: columns
     vertical_layout: fill
-runtime: shiny    
+   
 ---
+
 ```{css}
 .value-box {
   height: 115px;
@@ -56,8 +57,7 @@ Theme2 = theme(
 
 ```
 
-Column {data-width=900 .tabset}
------------------------------------------------------------------------
+## Column {.tabset data-width="900"}
 
 ### Atletas por categoria y sexo
 
@@ -110,8 +110,7 @@ geom_point() + theme(plot.background = element_rect(fill = "#e9c46a",color = "tr
 facet_wrap(~ sex)
 ```
 
-Column { data-width=100 }
------------------------------------------------------------------------
+## Column {data-width="100"}
 
 ### Chart C
 
@@ -132,7 +131,6 @@ valueBox(value = paste((length(CarreraLuz22F$timerun))),
 
 ```
 
-
 ### Chart E
 
 ```{r}
@@ -143,7 +141,8 @@ valueBox(value = paste((length(CarreraLuz22M$timerun))),
 
 ```
 
-### Promedio Hombres 
+### Promedio Hombres
+
 ```{r}
 valueBox(value =paste(round(mean(CarreraLuz22M$timerun/60, trim= 0.1),1),"min"), # ud1$cierre, 
          caption = "Tiempo promedio Hombres", 
@@ -151,7 +150,9 @@ valueBox(value =paste(round(mean(CarreraLuz22M$timerun/60, trim= 0.1),1),"min"),
          color = "#eae2b7",
         )
 ```
-### Promedio Mujeres 
+
+### Promedio Mujeres
+
 ```{r}
 valueBox(value =paste(round(mean(CarreraLuz22F$timerun/60, trim= 0.1),1),"min"), # ud1$cierre, 
          caption = "Tiempo promedio Mujeres", 
