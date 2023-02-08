@@ -1,0 +1,31 @@
+install.packages("flexdashboard")  # instala paquete flexdashboard
+install.packages("devtools")  # instala paquete devtools
+devtools::install_github("dgonxalex80/paqueteMET") # descarga de paqueteMET
+library(paqueteMET)     # activar paqueteMET
+
+data("CarreraLuz22")    # cargar la dataset
+
+install.packages("remotes")  
+remotes::install_github("rstudio/bslib",force = TRUE)  # descarga paquete que contiene formato
+library(flexdashboard)
+library(ggplot2)
+ggplot(CarreraLuz22, aes(y=edad , x=timerun/60))+
+  geom_point()+
+  facet_wrap(~ sex)
+
+CarreraLuz22M = subset(CarreraLuz22, CarreraLuz22$sex=="Hombre")
+CarreraLuz22F = subset(CarreraLuz22, CarreraLuz22$sex=="Mujer")
+density(CarreraLuz22F$timerun/60)
+par(mar = c(5, 4, 4, 1)+0.5)
+plot(density(CarreraLuz22F$timerun/60), lwd=3, col="#0d3b66",
+     main = "Distribución del tiempo - mujeres categoría Veteranas B",
+     xlab="tiempo (min)",
+     ylab = "densidad", las=1,
+     cex.lab=1,  # tamaño de etiqueta ejes
+     cex.axis=.8, # tamaño escalas de los ejes 
+     cex.main=1, # tamaño del titulo
+     cex.sub=1)    # tamaño del subtitulo)
+mean(CarreraLuz22F$timerun/60)
+mean(CarreraLuz22M$timerun/60)
+mean(CarreraLuz22M$timerun/60, trim= 0.1)
+

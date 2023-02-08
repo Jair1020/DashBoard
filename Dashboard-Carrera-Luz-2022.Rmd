@@ -1,0 +1,161 @@
+---
+title: "CARRERA LA LUZ 2022"
+subtile: "Unidad 1 - Métodos y Simulación Estadística"
+output: 
+  flexdashboard::flex_dashboard:
+    theme:
+      bg: "#e9c46a"
+      fg: "#0000" 
+      primary: "#33415c"
+      base_font:
+        google: Prompt
+      code_font:
+        google: JetBrains Mono
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny    
+---
+```{css}
+.value-box {
+  height: 115px;
+}
+.container-fluid {
+  justify-content: center;
+  width: auto;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: italic;
+}
+.navbar {
+border-bottom: 2px solid black
+}
+```
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+# Install thematic and un-comment for themed static plots (i.e., ggplot2)
+# thematic::thematic_rmd()
+library(ggplot2)
+library(plotly)
+library(paqueteMET)
+data("CarreraLuz22")
+
+CarreraLuz22M = subset(CarreraLuz22, CarreraLuz22$sex=="Hombre")
+CarreraLuz22F = subset(CarreraLuz22, CarreraLuz22$sex=="Mujer")
+Theme2 = theme(
+  axis.title.x = element_text(size = 8),
+  axis.text.x = element_text(size = 8),
+  axis.title.y = element_text(size = 8),
+  # axis.text.y = element_blank(),
+  axis.text = element_text( size = 8),
+  legend.title = element_text(size = 8),
+  legend.text = element_text(size = 8),  
+  strip.text = element_text(size=8),
+  title =element_text(size=8, face='bold')
+)# tamaño letra por grupos
+
+```
+
+Column {data-width=900 .tabset}
+-----------------------------------------------------------------------
+
+### Atletas por categoria y sexo
+
+```{r}
+conteo <- table(CarreraLuz22$sex,CarreraLuz22$categoria)
+barplot(conteo, main="Número de atletas por categoria y sexo",  
+        xlab="Categorías",
+        col=c("#219ebc","#ff70a6"),
+        legend = rownames(conteo),
+        las=1, ylim = c(0,800), 
+        names.arg=c("Juvenil","Abierta","Veteranos A","Veteranos B","Veteranos C"),
+        cex.names= 0.8,
+        beside=TRUE,
+        
+        )
+```
+
+### Distribución de tiempo por sexo
+
+```{r}
+boxplot(CarreraLuz22$timerun/60~CarreraLuz22$sex,
+main = "Distribución del tiempo carrera La Luz 2022",
+ylab="Tiempo (min)",
+xlab = "Sexo", las=1,
+col=c("#219ebc","#ff70a6"))
+```
+
+### Densidad de tiempo Mujeres vs Hombres
+
+```{r}
+par(mar = c(5, 4, 4, 1)+0.5)
+plot(density(CarreraLuz22F$timerun/60), lwd=3, col="#ff70a6",
+main = "Densidad de tiempo Mujeres vs Hombres  ",
+xlab="Tiempo (min)",
+ylim= c(0,0.04),
+ylab = "Densidad", las=1,
+cex.lab=1,  # tamaño de etiqueta ejes
+cex.axis=.8, # tamaño escalas de los ejes 
+cex.main=1, # tamaño del titulo
+cex.sub=1)    # tamaño del subtitulo
+lines(density(CarreraLuz22M$timerun/60),col="#219ebc",lwd=3)
+legend("topright",col=c("#ff70a6","#219ebc"),legend =c("Mujeres","Hombres"), lwd=3, bty = "n")
+```
+
+### Distribución de tiempo por edad
+
+```{r}
+ggplot(CarreraLuz22, aes(y=edad , x=timerun/60,color=categoria))+
+geom_point() + theme(plot.background = element_rect(fill = "#e9c46a",color = "transparent"), panel.background = element_rect(fill = "#eae2b7")) + xlab("Tiempo (min)") + ylab("Edad") +
+facet_wrap(~ sex)
+```
+
+Column { data-width=100 }
+-----------------------------------------------------------------------
+
+### Chart C
+
+```{r}
+valueBox(value =paste(round(min(CarreraLuz22$timerun/60),1), "min"),
+         caption = "Tiempo ganador", 
+         icon = "fa-thumbs-up", 
+         color = "#eae2b7")
+```
+
+### Chart D
+
+```{r}
+valueBox(value = paste((length(CarreraLuz22F$timerun))),
+         caption = "Mujeres", 
+         icon = "fa-user", 
+         color = "#eae2b7")
+
+```
+
+
+### Chart E
+
+```{r}
+valueBox(value = paste((length(CarreraLuz22M$timerun))),
+         caption = "Hombres", 
+         icon = "fa-user", 
+         color = "#eae2b7")
+
+```
+
+### Promedio Hombres 
+```{r}
+valueBox(value =paste(round(mean(CarreraLuz22M$timerun/60, trim= 0.1),1),"min"), # ud1$cierre, 
+         caption = "Tiempo promedio Hombres", 
+         icon = "fa-clock", 
+         color = "#eae2b7",
+        )
+```
+### Promedio Mujeres 
+```{r}
+valueBox(value =paste(round(mean(CarreraLuz22F$timerun/60, trim= 0.1),1),"min"), # ud1$cierre, 
+         caption = "Tiempo promedio Mujeres", 
+         icon = "fa-clock", 
+         color = "#eae2b7")
+
+```
